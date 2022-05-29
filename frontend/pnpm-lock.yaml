@@ -16,7 +16,7 @@ specifiers:
 dependencies:
   '@react-three/drei': 9.11.3_zomxkredbovc3broomp24qdqbi
   '@react-three/fiber': 8.0.19_5vzz734aui5gu3jm6wlduec5ym
-  conquest-eth: link:../conquest-eth-common
+  conquest-eth: link:../../conquest-eth-common
   next: 12.1.6_ef5jwxihqo6n7gxfmzogljlgcm
   react: 18.1.0
   react-dom: 18.1.0_react@18.1.0
