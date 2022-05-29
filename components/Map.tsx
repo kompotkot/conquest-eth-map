@@ -6,8 +6,28 @@ import { OrthographicCameraHelper } from "./elements/Camera"
 import Controls from "./elements/Controls"
 import Light from "./elements/Light"
 import { parseEvents, fleetSizeColor } from "./events"
-import { CameraConfig } from "./data"
 import styles from "../styles/Map.module.css"
+
+export interface CameraConfig {
+	posX: number
+	posY: number
+	posZ: number
+	left: number
+	right: number
+	top: number
+	bottom: number
+	near: number
+	far: number
+	zoom: number
+}
+
+export interface Event {
+	name: string
+	locX: number
+	locY: number
+	quantity: number
+	stake: number
+}
 
 // Docs: https://docs.pmnd.rs/react-three-fiber
 const Map = ({ data }) => {
@@ -43,9 +63,14 @@ const Map = ({ data }) => {
 				<Planet
 					color={fleetSizeColor(loc.quantity)}
 					scale={1}
+					eventDetails={{
+						name: "Fleet Sent",
+						locX: loc.x,
+						locY: loc.y,
+						quantity: loc.quantity
+					}}
 					position={[loc.x, loc.y, 0]}
 					key={`${loc.x}-${loc.y}`}
-					eventQuantity={loc.quantity}
 					windowWidth={window.innerWidth}
 					windowHeight={window.innerWidth}
 				/>
@@ -60,6 +85,12 @@ const Map = ({ data }) => {
 				<Planet
 					color="white"
 					scale={1}
+					eventDetails={{
+						name: "Exit Complete",
+						locX: loc.x,
+						locY: loc.y,
+						stake: loc.stake
+					}}
 					position={[loc.x, loc.y, 0]}
 					key={`${loc.x}-${loc.y}`}
 					eventStake={loc.stake}

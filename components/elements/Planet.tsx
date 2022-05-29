@@ -6,9 +6,11 @@ import Details from "./Details"
 
 const Planet = (props: JSX.IntrinsicElements["mesh"]) => {
 	const planetRef = useRef<THREE.Mesh>(null!)
+	const ringRef = useRef<THREE.Mesh>(null!)
 	const canvasRef = useRef(document.createElement("canvas"))
 
-	const [hovered, setHover] = useState(false)
+	const [hoveredElement, setHoverElement] = useState(false)
+	const [activeElement, setActiveElement] = useState(false)
 
 	// useLayoutEffect(() => {
 	// 	const canvas = canvasRef.current
@@ -27,14 +29,23 @@ const Planet = (props: JSX.IntrinsicElements["mesh"]) => {
 	// }, [])
 
 	useFrame((state, delta) => {
-		const canvas = canvasRef.current
-		canvas.width = window.innerWidth
-		canvas.height = window.innerHeight
+		// const canvas = canvasRef.current
+		// canvas.width = window.innerWidth
+		// canvas.height = window.innerHeight
 
-		const ctx = canvas.getContext("2d")
-		if (ctx) {
-			ctx.fillStyle = "purple"
-			ctx.fillRect(0, 0, 20, 20)
+		// const ctx = canvas.getContext("2d")
+		// if (ctx) {
+		// 	ctx.fillStyle = "purple"
+		// 	ctx.fillRect(0, 0, 20, 20)
+		// }
+		// if (ringRef) {
+		// 	ringRef.current.rotation += 0.01;
+		// }
+		// if (ringRef !== null) {
+		// 	console.log(ringRef)
+		// }
+		if (hoveredElement) {
+			ringRef.current.rotation.z += 0.01
 		}
 	})
 
@@ -42,15 +53,18 @@ const Planet = (props: JSX.IntrinsicElements["mesh"]) => {
 		<mesh
 			{...props}
 			ref={planetRef}
-			onPointerOver={() => setHover(true)}
-			onPointerOut={() => setHover(false)}
+			onPointerOver={() => setHoverElement(true)}
+			onPointerOut={() => setHoverElement(false)}
+			onClick={() => {
+				setActiveElement(!activeElement)
+			}}
 		>
 			<sphereBufferGeometry args={[1, 20, 20]} />
-			<meshBasicMaterial color={hovered ? "blue" : props.color} />
+			<meshBasicMaterial color={props.color} />
 
-			{hovered && (
+			{hoveredElement && (
 				<>
-					<mesh>
+					<mesh ref={ringRef}>
 						<ringGeometry
 							args={[2, 2.2, 40, 1, 0, 0.5 * Math.PI]}
 						/>
@@ -65,13 +79,16 @@ const Planet = (props: JSX.IntrinsicElements["mesh"]) => {
 						<ringGeometry args={[3, 3.2, 40]} />
 						<meshBasicMaterial
 							color="white"
-							transparent={true}
-							opacity={0.5}
-							side={THREE.DoubleSide}
+							// transparent={true}
+							// opacity={0.5}
+							// side={THREE.DoubleSide}
 						/>
 					</mesh>
-					<Details quantity={props.eventQuantity} />
 				</>
+			)}
+
+			{(hoveredElement || activeElement) && (
+				<Details eventDetails={props.eventDetails} />
 			)}
 		</mesh>
 	)
